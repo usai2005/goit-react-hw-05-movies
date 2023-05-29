@@ -1,7 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { Loader } from '../components/Loader/Loader';
 
 const options = {
   method: 'GET',
@@ -18,15 +17,12 @@ const MovieDetails = function () {
   const [title, setTitle] = useState('');
   const [score, setScore] = useState(0);
   const [overview, setOverview] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const locationRef = useRef(location.state?.from ?? '/');
 
   const { movieId } = useParams();
 
   useEffect(() => {
-    setIsLoading(true);
-
     async function fetchMovieDetails() {
       const response = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
@@ -45,16 +41,13 @@ const MovieDetails = function () {
         setOverview(movieDetails.overview);
       })
 
-      .catch(err => console.error(err))
-
-      .finally(setIsLoading(false));
+      .catch(err => console.error(err));
   }, [movieId]);
 
   return (
     <>
       <div>
         <Link to={locationRef.current}>Go back</Link>
-        {<Loader loading={isLoading} />}
         <img src={image} width="300" alt={title}></img>
 
         <h1>{title}</h1>

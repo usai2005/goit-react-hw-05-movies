@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Loader } from '../components/Loader/Loader';
+// import { Loader } from '../components/Loader/Loader';
 
 const options = {
   method: 'GET',
@@ -14,11 +14,8 @@ const options = {
 const Home = function () {
   const location = useLocation();
   const [moviesList, setMoviesList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
-
     async function fetchTrending() {
       const response = await fetch(
         'https://api.themoviedb.org/3/trending/all/day?language=en-US',
@@ -34,13 +31,10 @@ const Home = function () {
         const moviesList = movies.results;
         setMoviesList(moviesList);
       })
-      .catch(err => console.error(err))
-
-      .finally(setIsLoading(false));
+      .catch(err => console.error(err));
   }, []);
   return (
     <>
-      {<Loader loading={isLoading} />}
       <h1>Trending today</h1>
       <ul>
         {moviesList.map(movie => {

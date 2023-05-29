@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader } from '../components/Loader/Loader';
+import { RotatingLines } from 'react-loader-spinner';
 
 const options = {
   method: 'GET',
@@ -41,7 +41,17 @@ const Cast = function () {
 
   return (
     <>
-      {<Loader loading={isLoading} />}
+      {isLoading && (
+        <div>
+          <RotatingLines
+            strokeColor="#FF0000"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="50"
+            visible={true}
+          />
+        </div>
+      )}
       {cast.length === 0 ? (
         <p>Sorry, we don't have information about the actors</p>
       ) : (

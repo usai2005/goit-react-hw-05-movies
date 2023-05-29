@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Loader } from '../components/Loader/Loader';
+import { RotatingLines } from 'react-loader-spinner';
 
 const options = {
   method: 'GET',
@@ -15,15 +15,14 @@ const options = {
 const Movies = function () {
   const [searchResult, setSearchResult] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams({});
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeQuery = searchParams.get('query') ?? '';
 
-  const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
     if (searchQuery === '') return;
-
+    setSearchResult(null);
     setIsLoading(true);
 
     async function searchMovie() {
@@ -65,7 +64,6 @@ const Movies = function () {
 
   return (
     <div>
-      {<Loader loading={isLoading} />}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -75,6 +73,17 @@ const Movies = function () {
         />
         <button type="submit">Search</button>
       </form>
+      {isLoading && (
+        <div>
+          <RotatingLines
+            strokeColor="#FF0000"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="50"
+            visible={true}
+          />
+        </div>
+      )}
       <ul>
         {searchResult &&
           searchResult.map(movie => {
