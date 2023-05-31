@@ -11,11 +11,9 @@ const Movies = function () {
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeQuery = searchParams.get('query') ?? '';
 
-  useEffect(() => {
-    if (!searchQuery && onChangeQuery) {
-      setSearchQuery(searchParams);
-    }
-  }, []);
+  if (!searchQuery && onChangeQuery) {
+    setSearchQuery(searchParams);
+  }
 
   useEffect(() => {
     if (searchQuery === '') return;
