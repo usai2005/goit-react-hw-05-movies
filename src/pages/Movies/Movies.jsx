@@ -17,9 +17,8 @@ const Movies = function () {
 
   useEffect(() => {
     if (searchQuery === '') return;
-    setSearchResult(null);
-
     setIsLoading(true);
+    setSearchResult(null);
 
     async function searchMovie() {
       const response = await fetch(
@@ -68,7 +67,6 @@ const Movies = function () {
         />
         <button type="submit">Search</button>
       </Form>
-
       {isLoading}
       <List>
         {searchResult &&

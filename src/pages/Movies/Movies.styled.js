@@ -13,7 +13,6 @@ export const Form = styled.form`
     width: 250px;
     height: 35px;
     border-radius: 5px;
-    ${'' /* outline: none; */}
   }
 
   > button {

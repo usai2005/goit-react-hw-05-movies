@@ -6,8 +6,7 @@ export const Container = styled.div`
   flex-direction: column;
 
   margin-top: 5px;
-  padding-bottom: 7px;
-  border-bottom: 2px solid #d3d3d3;
+  padding-bottom: 100px;
 `;
 
 export const LinkWrapper = styled.div`
