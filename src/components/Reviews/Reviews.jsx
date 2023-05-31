@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { RotatingLines } from 'react-loader-spinner';
-
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMGUxN2RiYWMzM2I5YjY2YTE1OGFjMWQ5ZjBiNDgzZiIsInN1YiI6IjY0NmFhMTAxMmJjZjY3MDEzODk1NWI2MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SDn_VnUi_rZiJUD7l1IkM4cvRuTnV717d1ByGV3DRUI',
-  },
-};
+import { options, BASE_URL } from '../../services/ApiData';
+import { List } from './Reviews.styled';
 
 const Reviews = function () {
   const [reviews, setReviews] = useState([]);
@@ -21,7 +13,7 @@ const Reviews = function () {
     setIsLoading(true);
     async function fetchReviews() {
       const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`,
+        `${BASE_URL}/movie/${movieId}/reviews?language=en-US&page=1`,
         options
       );
       const reviews = await response.json();
@@ -39,21 +31,11 @@ const Reviews = function () {
 
   return (
     <>
-      {isLoading && (
-        <div>
-          <RotatingLines
-            strokeColor="#FF0000"
-            strokeWidth="5"
-            animationDuration="0.75"
-            width="50"
-            visible={true}
-          />
-        </div>
-      )}
+      {isLoading}
       {reviews.length === 0 ? (
         <p>Unfortunately, nobody left the review</p>
       ) : (
-        <ul>
+        <List>
           {reviews.map(({ author, id, content }) => {
             return (
               <li key={id}>
@@ -62,7 +44,7 @@ const Reviews = function () {
               </li>
             );
           })}
-        </ul>
+        </List>
       )}
     </>
   );

@@ -1,16 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { RotatingLines } from 'react-loader-spinner';
-
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMGUxN2RiYWMzM2I5YjY2YTE1OGFjMWQ5ZjBiNDgzZiIsInN1YiI6IjY0NmFhMTAxMmJjZjY3MDEzODk1NWI2MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SDn_VnUi_rZiJUD7l1IkM4cvRuTnV717d1ByGV3DRUI',
-  },
-};
+import { options, BASE_URL } from '../../services/ApiData';
+import { Form, List, FilmLink } from './Movies.styled';
 
 const Movies = function () {
   const [searchResult, setSearchResult] = useState(null);
@@ -21,13 +12,20 @@ const Movies = function () {
   const onChangeQuery = searchParams.get('query') ?? '';
 
   useEffect(() => {
+    if (!searchQuery && onChangeQuery) {
+      setSearchQuery(searchParams);
+    }
+  }, []);
+
+  useEffect(() => {
     if (searchQuery === '') return;
     setSearchResult(null);
+
     setIsLoading(true);
 
     async function searchMovie() {
       const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?${searchQuery}&include_adult=false&language=en-US&page=1`,
+        `${BASE_URL}/search/movie?${searchQuery}&include_adult=false&language=en-US&page=1`,
         options
       );
 
@@ -59,12 +57,11 @@ const Movies = function () {
     const form = e.currentTarget;
 
     setSearchQuery(`query=${form.elements.searchQuery.value}`);
-    form.reset();
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <>
+      <Form onSubmit={handleSubmit}>
         <input
           type="text"
           name="searchQuery"
@@ -72,31 +69,22 @@ const Movies = function () {
           onChange={updateQueryString}
         />
         <button type="submit">Search</button>
-      </form>
-      {isLoading && (
-        <div>
-          <RotatingLines
-            strokeColor="#FF0000"
-            strokeWidth="5"
-            animationDuration="0.75"
-            width="50"
-            visible={true}
-          />
-        </div>
-      )}
-      <ul>
+      </Form>
+
+      {isLoading}
+      <List>
         {searchResult &&
           searchResult.map(movie => {
             return (
               <li key={movie.id}>
-                <Link to={`${movie.id}`} state={{ from: location }}>
+                <FilmLink to={`${movie.id}`} state={{ from: location }}>
                   {movie.title ? movie.title : movie.name}
-                </Link>
+                </FilmLink>
               </li>
             );
           })}
-      </ul>
-    </div>
+      </List>
+    </>
   );
 };
 
