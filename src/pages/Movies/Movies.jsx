@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
+import { RotatingLines } from 'react-loader-spinner';
 import { options, BASE_URL } from '../../services/ApiData';
-import { Form, List, FilmLink } from './Movies.styled';
+import { LoaderWrapper, Form, List, FilmLink } from './Movies.styled';
 
 const Movies = function () {
   const [searchResult, setSearchResult] = useState(null);
@@ -11,13 +12,17 @@ const Movies = function () {
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeQuery = searchParams.get('query') ?? '';
 
-  if (!searchQuery && onChangeQuery) {
-    setSearchQuery(searchParams);
-  }
+  useEffect(() => {
+    if (!searchQuery && onChangeQuery) {
+      setSearchQuery(searchParams);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (searchQuery === '') return;
     setIsLoading(true);
+
     setSearchResult(null);
 
     async function searchMovie() {
@@ -38,7 +43,9 @@ const Movies = function () {
       })
       .catch(err => console.error(err))
 
-      .finally(setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [searchQuery]);
 
   const updateQueryString = e => {
@@ -67,7 +74,17 @@ const Movies = function () {
         />
         <button type="submit">Search</button>
       </Form>
-      {isLoading}
+      {isLoading && (
+        <LoaderWrapper>
+          <RotatingLines
+            strokeColor="#FF0000"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="50"
+            visible={true}
+          />
+        </LoaderWrapper>
+      )}
       <List>
         {searchResult &&
           searchResult.map(movie => {

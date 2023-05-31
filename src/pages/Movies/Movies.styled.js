@@ -33,6 +33,14 @@ export const Form = styled.form`
   }
 `;
 
+export const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+`;
+
 export const List = styled.ul`
   padding: 0 16px;
 
